@@ -1,59 +1,192 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# To-Do API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API REST para gestión de tareas personales, construida con Laravel 12 y autenticación por tokens con Laravel Sanctum.
 
-## About Laravel
+## Estructura del proyecto
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── AuthController.php
+│   │   ├── CategoryController.php
+│   │   └── TaskController.php
+│   ├── Requests/
+│   │   ├── StoreCategoryRequest.php
+│   │   ├── UpdateCategoryRequest.php
+│   │   ├── StoreTaskRequest.php
+│   │   └── UpdateTaskRequest.php
+│   └── Resources/
+│       ├── CategoryResource.php
+│       └── TaskResource.php
+└── Models/
+    ├── User.php
+    ├── Category.php
+    └── Task.php
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tecnologías
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.2+
+- Laravel 12
+- MySQL
+- Laravel Sanctum
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Características
 
-## Learning Laravel
+- Autenticación completa (register, login, logout)
+- CRUD de tareas con estados y prioridades
+- CRUD de categorías con colores personalizados
+- Filtros por estado, prioridad y categoría
+- Búsqueda por título
+- Ordenamiento por múltiples campos
+- Paginación configurable
+- Cada usuario solo accede a sus propios datos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Requisitos
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP >= 8.2
+- Composer
+- MySQL
 
-## Laravel Sponsors
+## Instalación
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Clona el repositorio:
+```bash
+git clone https://github.com/zahid210/To-Do-API.git
+cd To-Do-API
+```
 
-### Premium Partners
+2. Instala dependencias:
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+3. Copia el archivo de entorno y genera la clave:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Contributing
+4. Configura tu base de datos en `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=todo_api
+DB_USERNAME=root
+DB_PASSWORD=tu_password
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. Ejecuta las migraciones:
+```bash
+php artisan migrate
+```
 
-## Code of Conduct
+6. (Opcional) Carga datos de prueba:
+```bash
+php artisan db:seed --class=TaskSeeder
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. Inicia el servidor:
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+La API estará disponible en `http://127.0.0.1:8000`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Endpoints
 
-## License
+Todos los endpoints protegidos requieren los headers:
+```
+Authorization: Bearer {token}
+Accept: application/json
+Content-Type: application/json
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Autenticación
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/register` | Registrar usuario | No |
+| POST | `/api/login` | Iniciar sesión | No |
+| POST | `/api/logout` | Cerrar sesión | Sí |
+| GET | `/api/me` | Usuario autenticado | Sí |
+
+### Categorías
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/categories` | Listar categorías |
+| POST | `/api/categories` | Crear categoría |
+| GET | `/api/categories/{id}` | Ver categoría |
+| PUT | `/api/categories/{id}` | Actualizar categoría |
+| DELETE | `/api/categories/{id}` | Eliminar categoría |
+
+### Tareas
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/tasks` | Listar tareas (con filtros) |
+| POST | `/api/tasks` | Crear tarea |
+| GET | `/api/tasks/{id}` | Ver tarea |
+| PUT | `/api/tasks/{id}` | Actualizar tarea |
+| DELETE | `/api/tasks/{id}` | Eliminar tarea |
+
+### Filtros disponibles en GET /api/tasks
+
+| Parámetro | Tipo | Ejemplo | Descripción |
+|-----------|------|---------|-------------|
+| `status` | string | `pending` | Filtra por estado |
+| `priority` | string | `high` | Filtra por prioridad |
+| `category_id` | integer | `1` | Filtra por categoría |
+| `search` | string | `reunion` | Busca en el título |
+| `sort_by` | string | `due_date` | Campo para ordenar |
+| `sort_dir` | string | `asc` | Dirección: asc o desc |
+| `per_page` | integer | `5` | Resultados por página (máx. 50) |
+
+## Ejemplos de uso
+
+### Registrar usuario
+```json
+POST /api/register
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+### Crear categoría
+```json
+POST /api/categories
+{
+    "name": "Trabajo",
+    "color": "#6366f1"
+}
+```
+
+### Crear tarea
+```json
+POST /api/tasks
+{
+    "title": "Revisar pull requests",
+    "description": "Revisar los PRs pendientes del equipo",
+    "status": "pending",
+    "priority": "high",
+    "due_date": "2026-12-31",
+    "category_id": 1
+}
+```
+
+### Filtrar tareas
+```
+GET /api/tasks?status=pending&priority=high&sort_by=due_date&sort_dir=asc
+```
+
+## Autor
+
+**Zahid Roy Matos Ceras**
+Estudiante de Ingeniería de Sistemas
+
+Proyecto personal – uso educativo
