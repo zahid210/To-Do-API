@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Nette\Schema\ValidationException;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -35,8 +36,8 @@ class AuthController extends Controller
     public function login(Request $request) : JsonResponse
     {
         $request->validate([
-            'email' => 'require|email',
-            'password' => 'require',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if(!Auth::attempt($request->only('email','password'))){
