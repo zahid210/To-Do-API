@@ -147,8 +147,8 @@ Content-Type: application/json
 ## Ejemplos de uso
 
 ### Registrar usuario
-```json
 POST /api/register
+```json
 {
     "name": "John Doe",
     "email": "john@example.com",
@@ -158,8 +158,8 @@ POST /api/register
 ```
 
 ### Crear categoría
-```json
 POST /api/categories
+```json
 {
     "name": "Trabajo",
     "color": "#6366f1"
@@ -167,8 +167,8 @@ POST /api/categories
 ```
 
 ### Crear tarea
-```json
 POST /api/tasks
+```json
 {
     "title": "Revisar pull requests",
     "description": "Revisar los PRs pendientes del equipo",
